@@ -5,10 +5,10 @@
 #include "serial.h"
 #include "led.h"
 
-#define LED0 0b1000000000000000000
-#define LED1 0b100000000000000000000
-#define LED2 0b1000000000000000000000
-#define LED3 0b100000000000000000000000
+#define LED0 1<<18
+#define LED1 1<<20
+#define LED2 1<<21
+#define LED3 1<<23
 #define ALL_LEDS LED0 | LED1 | LED2 | LED3
 
 
