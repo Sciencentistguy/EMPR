@@ -1,38 +1,45 @@
-#include <lpc17xx_gpio.h>
+#include "serial.h"
+#include "led.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <lpc17xx_systick.h>
 
-#define LED1 0b1000000000000000000
-#define LED2 0b100000000000000000000
-#define LED3 0b1000000000000000000000
-#define LED4 0b100000000000000000000000
-#define ALL_LEDS LED1 | LED2 | LED3 | LED4
+char toggleFlag = 0;
+char secondCounter = 0;
+char counter = 0;
 
-void SysTick_Handler();
-
-char toggleCounter = 0;
-char loopCounter = 0;
-char flag3 = 0;
 int main() {
     SYSTICK_Cmd(ENABLE);
     SYSTICK_IntCmd(ENABLE);
     SYSTICK_InternalInit(100);
-    GPIO_SetDir(1, ALL_LEDS, 1);
+//    GPIO_SetDir(1, ALL_LEDS, 1);
+    serial_init();
+    char buf[20];
+    memset(buf, 0, sizeof(buf));
+    sprintf(buf, "Starting Count\r\n");
+    write_usb_serial_blocking(buf, sizeof(buf));
 
     for (;;);
 }
 
 void SysTick_Handler() {
-    if (++loopCounter != 10)
+    if (++secondCounter != 10)
         return;
 
-    loopCounter = 0;
+    if (counter < 16) {
+        secondCounter = 0;
+        LED_WriteInt(counter);
+    }
 
-    if (toggleCounter == 0) {
-        GPIO_SetValue(1, ALL_LEDS);
-        toggleCounter = 1;
+    if (++counter > 16) {
+        for (int i = 0; i < 4; i++)
+            SetLED(i, 0);
 
-    } else {
-        GPIO_ClearValue(1, ALL_LEDS);
-        toggleCounter = 0;
+        char buf[16];
+        memset(buf, 0, sizeof(buf));
+        sprintf(buf, "Finished Count\r\n");
+        write_usb_serial_blocking(buf, sizeof(buf));
+        exit(0);
     }
 }

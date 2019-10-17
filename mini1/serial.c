@@ -5,12 +5,12 @@
 #include "serial.h"         // Local functions
 
 // Entry point for the program
-void main(void) {
+/*  void main(void) {
     serial_init();
     write_usb_serial_blocking("USB test code\n\r", 16);
 
     while (1);
-}
+    }*/
 
 // Read options
 int read_usb_serial_none_blocking(char* buf, int length) {
