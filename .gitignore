@@ -1,4 +1,4 @@
 bin/
 *.o
 *.bin
-.ccls*/
+.ccls-cache/

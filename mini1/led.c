@@ -5,14 +5,9 @@
 #include "serial.h"
 #include "led.h"
 
-#define LED0 1<<18
-#define LED1 1<<20
-#define LED2 1<<21
-#define LED3 1<<23
-#define ALL_LEDS LED0 | LED1 | LED2 | LED3
 
 
-void LED_WriteInt(int number) {
+void LED_WriteInt(unsigned char number) {
     char bin[8];
     memset(bin, 0, sizeof(bin));
     sprintf(bin, "0000");
@@ -47,11 +42,7 @@ void LED_WriteInt(int number) {
     write_usb_serial_blocking(buf, sizeof(buf));
 }
 
-void SetLED(int led, int state) {
-//    char buf[128];
-//    memset(buf, 0, sizeof(buf));
-//    sprintf(buf, "Setting LED%i to %i\n", led, state);
-//    write_usb_serial_blocking(buf, sizeof(buf));
+void SetLED(unsigned char led, unsigned char state) {
     switch (led) {
         case 0:
             GPIO_SetDir(1, LED0, 1);

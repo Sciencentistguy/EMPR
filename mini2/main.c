@@ -13,96 +13,73 @@ char toggleFlag = 0;
 char secondCounter = 0;
 char counter = 0;
 void stage_1();
-char buf = 0;
 char buf2[64];
-void LCD_WriteChar(char, char);
+void LCD_WriteChar(unsigned char, unsigned char);
 void LCD_ClearScreen();
-void LCD_send1b(char);
-void LCD_send2b(char,char);
+void LCD_SendByte(unsigned char);
 
 int main() {
+    SERIAL_Init();
     PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
     PINSEL_ConfigPin(&pinsel_CFG);
-    I2C_M_SETUP_Type t;
     pinsel_CFG.Pinnum = 1;
-    serial_init();
     PINSEL_ConfigPin(&pinsel_CFG);
     I2C_Init(LPC_I2C1, 100000);
     I2C_Cmd(LPC_I2C1, 1);
-    char data[64];
-    t.sl_addr7bit = LCD_ADDR;
-    t.tx_data = (uint8_t*)&data;
-    t.tx_length = sizeof(data);
-    t.retransmissions_max = 2;
-    t.rx_length = 0;
-    t.rx_data = NULL;
-    memset(data, 0, sizeof(data));
-    char* p = data;
-    *p++ = 0x00;
-    *p++ = 0x34;
-    *p++ = 0x0c;
-    *p++ = 0x06;
-    *p++ = 0x35;
-    *p++ = 0x04;
-    *p++ = 0x10;
-    *p++ = 0x42;
-    *p++ = 0x9f;
-    *p++ = 0x34;
-    *p++ = 0x02;
-    *p++ = 0x00;
-    *p++ = 0x01;
-    I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
+    // Init screen
+    LCD_SendByte(0x00);
+    LCD_SendByte(0x00);
+    LCD_SendByte(0x34);
+    LCD_SendByte(0x0c);
+    LCD_SendByte(0x06);
+    LCD_SendByte(0x35);
+    LCD_SendByte(0x04);
+    LCD_SendByte(0x10);
+    LCD_SendByte(0x42);
+    LCD_SendByte(0x9f);
+    LCD_SendByte(0x34);
+    LCD_SendByte(0x02);
+    LCD_SendByte(0x00);
+    LCD_SendByte(0x01);
+    // End init
     LCD_ClearScreen();
     LCD_WriteChar(0x80, 0xC8);
     LCD_WriteChar(0x81, 0x65);
     LCD_WriteChar(0x82, 0xEC);
     LCD_WriteChar(0x83, 0xEC);
-    LCD_WriteChar(0x84, 0xEC+3);
+    LCD_WriteChar(0x84, 0xEF);
     LCD_WriteChar(0x86, 0xD7);
-    LCD_WriteChar(0x87, 0xEC+3);
+    LCD_WriteChar(0x87, 0xEF);
     LCD_WriteChar(0x88, 0x72);
     LCD_WriteChar(0x89, 0xEC);
     LCD_WriteChar(0x8a, 0x64);
-    //LCD_WriteChar(0x05, 0xEC);
 }
 
 void LCD_ClearScreen() {
-    LCD_send1b(0b1000);
+    LCD_SendByte(0b1000);
+
     for (int i = 0; i < 32; i++)
         LCD_WriteChar(0x80 + i, 0xA0);
-    LCD_send1b(0b1100);
+
+    LCD_SendByte(0b1100);
 }
 
-void LCD_send1b(char b1) {
+void LCD_SendByte(unsigned char b1) {
     I2C_M_SETUP_Type t;
-    char data[1];
     t.sl_addr7bit = LCD_ADDR;
-    t.tx_data = (uint8_t*)&data;
-    t.tx_length = sizeof(data);
+    t.tx_data = &b1;
+    t.tx_length = sizeof(b1);
     t.retransmissions_max = 2;
     t.rx_length = 0;
     t.rx_data = NULL;
-    data[0] = b1;
     I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
 }
 
-void LCD_send2b(char b1, char b2) {
-    I2C_M_SETUP_Type t;
-    char data[2];
-    t.sl_addr7bit = LCD_ADDR;
-    t.tx_data = (uint8_t*)&data;
-    t.tx_length = sizeof(data);
-    t.retransmissions_max = 2;
-    t.rx_length = 0;
-    t.rx_data = NULL;
-    data[0] = b1;
-    data[1] = b2;
-    I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
-}
-
-void LCD_WriteChar(char location, char character) {
-    LCD_send2b(0x00, location);
-    LCD_send2b(0x40, character); 
+void LCD_WriteChar(unsigned char location, unsigned char character) {
+    LCD_SendByte(0x00);
+    LCD_SendByte(location);
+    LCD_SendByte(0x40);
+    LCD_SendByte(character);
 }
 
 void stage_1() {
