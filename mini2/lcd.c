@@ -1,10 +1,37 @@
 #include <lpc17xx_i2c.h>
+#include <lpc17xx_pinsel.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "serial.h"
 #include "lcd.h"
 
+
+void LCD_Init() {
+    PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
+    PINSEL_ConfigPin(&pinsel_CFG);
+    pinsel_CFG.Pinnum = 1;
+    PINSEL_ConfigPin(&pinsel_CFG);
+    I2C_Init(LPC_I2C1, 100000);
+    I2C_Cmd(LPC_I2C1, 1);
+    unsigned char data[16];
+    memset(data, 0, sizeof(data));
+    unsigned char* p = data;
+    *p++ = 0x00;
+    *p++ = 0x34;
+    *p++ = 0x0c;
+    *p++ = 0x06;
+    *p++ = 0x35;
+    *p++ = 0x04;
+    *p++ = 0x10;
+    *p++ = 0x42;
+    *p++ = 0x9f;
+    *p++ = 0x34;
+    *p++ = 0x02;
+    *p++ = 0x00;
+    *p++ = 0x02;
+    LCD_SendBuf(data, sizeof(data));
+}
 
 void LCD_SendBuf(unsigned char* buf, int size) {
     I2C_M_SETUP_Type t;
@@ -18,8 +45,8 @@ void LCD_SendBuf(unsigned char* buf, int size) {
 }
 
 
-void LCD_WriteString(unsigned char* str) {
-    unsigned char c, j;
+void LCD_WriteString(char* str) {
+    char c, j;
     j = 0x80;
 
     for (int i = 0;; i++) {
@@ -29,7 +56,7 @@ void LCD_WriteString(unsigned char* str) {
             break;
 
         if (c == '\n') {
-            j = 0x80 + 40;
+            j = 0xA8;
             continue;
         }
 
@@ -62,28 +89,23 @@ void LCD_WriteChar(unsigned char location, unsigned char character) {
 }
 
 
-void stage_1() {
-    char buf;
+void I2C_SweepBus() {
+    unsigned char buf;
     I2C_M_SETUP_Type t;
     int j = 0;
     char buf2[64];
-    /*
-        t.retransmissions_count = 0;
-        t.tx_count = 0;
-        t.rx_count = 0;
-    */
 
     for (int i = 0; i < 128; i++) {
         t.sl_addr7bit = i & 0b1111111;
-        t.tx_data = (uint8_t*)&buf;
-        t.tx_length = 1; // sizeof(buf);
+        t.tx_data = &buf;
+        t.tx_length = sizeof(buf);
         t.retransmissions_max = 2;
         t.rx_length = 0;
         t.rx_data = NULL;
 
         if (I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING) == SUCCESS) {
             memset(buf2, 0, sizeof(buf2));
-            sprintf(buf2, "there is something on address %i\r\n", i);
+            sprintf(buf2, "There is something on address %i\r\n", i);
             SERIAL_WriteBuf(buf2, sizeof(buf2));
             j++;
         }
@@ -284,5 +306,8 @@ unsigned char LCD_DecodeCharacter(unsigned char c) {
 
         case ' ':
             return 0xA0;
+            
+        default: // If in doubt, return '?'
+            return 0xBF;
     }
 }
