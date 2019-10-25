@@ -17,6 +17,7 @@ char buf2[64];
 void LCD_WriteChar(unsigned char, unsigned char);
 void LCD_ClearScreen();
 void LCD_SendByte(unsigned char);
+void LCD_SendBuf(unsigned char*, int);
 
 int main() {
     SERIAL_Init();
@@ -27,21 +28,24 @@ int main() {
     I2C_Init(LPC_I2C1, 100000);
     I2C_Cmd(LPC_I2C1, 1);
     // Init screen
-    LCD_SendByte(0x00);
-    LCD_SendByte(0x00);
-    LCD_SendByte(0x34);
-    LCD_SendByte(0x0c);
-    LCD_SendByte(0x06);
-    LCD_SendByte(0x35);
-    LCD_SendByte(0x04);
-    LCD_SendByte(0x10);
-    LCD_SendByte(0x42);
-    LCD_SendByte(0x9f);
-    LCD_SendByte(0x34);
-    LCD_SendByte(0x02);
-    LCD_SendByte(0x00);
-    LCD_SendByte(0x01);
-    // End init
+    unsigned char data[16];
+    memset(data, 0, sizeof(data));
+    unsigned char* p = data;
+    *p++ = 0x00;
+    *p++ = 0x34;
+    *p++ = 0x0c;
+    *p++ = 0x06;
+    *p++ = 0x35;
+    *p++ = 0x04;
+    *p++ = 0x10;
+    *p++ = 0x42;
+    *p++ = 0x9f;
+    *p++ = 0x34;
+    *p++ = 0x02;
+    *p++ = 0x00;
+    *p++ = 0x02;
+
+    LCD_SendBuf(data, sizeof(data));
     LCD_ClearScreen();
     LCD_WriteChar(0x80, 0xC8);
     LCD_WriteChar(0x81, 0x65);
@@ -55,6 +59,17 @@ int main() {
     LCD_WriteChar(0x8a, 0x64);
 }
 
+void LCD_SendBuf(unsigned char* buf, int size) {
+    I2C_M_SETUP_Type t;
+    t.sl_addr7bit = LCD_ADDR;
+    t.tx_data = buf;
+    t.tx_length = size;
+    t.retransmissions_max = 2;
+    t.rx_length = 0;
+    t.rx_data = NULL;
+    I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
+}
+
 void LCD_ClearScreen() {
     LCD_SendByte(0b1000);
 
@@ -65,21 +80,17 @@ void LCD_ClearScreen() {
 }
 
 void LCD_SendByte(unsigned char b1) {
-    I2C_M_SETUP_Type t;
-    t.sl_addr7bit = LCD_ADDR;
-    t.tx_data = &b1;
-    t.tx_length = sizeof(b1);
-    t.retransmissions_max = 2;
-    t.rx_length = 0;
-    t.rx_data = NULL;
-    I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
+    LCD_SendBuf(&b1, 1);
 }
 
 void LCD_WriteChar(unsigned char location, unsigned char character) {
-    LCD_SendByte(0x00);
-    LCD_SendByte(location);
-    LCD_SendByte(0x40);
-    LCD_SendByte(character);
+    unsigned char buf[2];
+    buf[0] = 0x00;
+    buf[1] = location;
+    LCD_SendBuf(buf, sizeof(buf));
+    buf[0] = 0x40;
+    buf[1] = character;
+    LCD_SendBuf(buf, sizeof(buf));
 }
 
 void stage_1() {
