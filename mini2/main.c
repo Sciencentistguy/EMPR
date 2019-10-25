@@ -83,6 +83,7 @@ void LCD_WriteChar(unsigned char location, unsigned char character) {
 }
 
 void stage_1() {
+    char buf;
     I2C_M_SETUP_Type t;
     int j = 0;
     LED_WriteInt(15);
@@ -105,14 +106,14 @@ void stage_1() {
         if (I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING) == SUCCESS) {
             memset(buf2, 0, sizeof(buf2));
             sprintf(buf2, "there is something on address %i\r\n", i);
-            write_usb_serial_blocking(buf2, sizeof(buf2));
+            SERIAL_WriteBuf(buf2, sizeof(buf2));
             j++;
         }
     }
 
     memset(buf2, 0, sizeof(buf2));
     sprintf(buf2, "There are %i devices connected to the I2C bus.\r\n", j);
-    write_usb_serial_blocking(buf2, sizeof(buf2));
+    SERIAL_WriteBuf(buf2, sizeof(buf2));
 }
 void SysTick_Handler() {
     //stub
