@@ -2,7 +2,7 @@
 
 # Ensure consistent environment
 SHELL := /bin/bash
-PATH := /opt/york/cs/net/bin:$(PATH)
+#PATH := /opt/york/cs/net/bin:$(PATH)
 
 # Path to the GCC toolbox
 PKG=/opt/york/cs/net
@@ -57,7 +57,7 @@ all:	main
 
 main: $(OBJ)
 	mkdir -p bin # prevent error "No such file or directory" during linking
-	$(CC) -o $(EXECNAME) $(OBJ) $(LDFLAGS)
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJ) $(LDFLAGS)
 	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
 
 # make clean - Clean out the source tree ready to re-build the project
