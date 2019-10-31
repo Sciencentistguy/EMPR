@@ -15,6 +15,7 @@ char buf2[64];
 
 int main() {
     SERIAL_Init();
+    LCD_Init();
     LCD_ClearScreen();
     LCD_WriteString("Hello World");
     LCD_WriteString("Hello\nWorld");

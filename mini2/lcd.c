@@ -117,11 +117,11 @@ void I2C_SweepBus() {
 }
 
 unsigned char LCD_DecodeCharacter(unsigned char c) {
-    if ('A' >= c && c >= 'Z') {
+    if ('A' <= c && c <= 'Z') {
         return c + 0x80;
     }
 
-    if ('a' >= c && c >= 'z') {
+    if ('a' <= c && c <= 'z') {
         return c;
     }
 
