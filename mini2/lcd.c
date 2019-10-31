@@ -6,6 +6,7 @@
 #include "serial.h"
 #include "lcd.h"
 
+char pos = 0;
 
 void LCD_Init() {
     PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
@@ -31,6 +32,7 @@ void LCD_Init() {
     *p++ = 0x00;
     *p++ = 0x02;
     LCD_SendBuf(data, sizeof(data));
+    LCD_ClearScreen();
 }
 
 void LCD_SendBuf(unsigned char* buf, int size) {
@@ -65,6 +67,18 @@ void LCD_WriteString(char* str) {
     };
 }
 
+void LCD_ResetPos(){
+    pos=0x80;
+}
+
+void LCD_WriteCharacter(unsigned char c) {
+    if (pos < 0x80u || pos > (unsigned char)0x80 + 16)
+        LCD_ResetPos();
+
+    LCD_WriteChar(pos, LCD_DecodeCharacter(c));
+    pos++;
+}
+
 void LCD_ClearScreen() {
     LCD_SendByte(0b1000);
 
@@ -87,7 +101,6 @@ void LCD_WriteChar(unsigned char location, unsigned char character) {
     buf[1] = character;
     LCD_SendBuf(buf, sizeof(buf));
 }
-
 
 void I2C_SweepBus() {
     unsigned char buf;
@@ -125,9 +138,21 @@ unsigned char LCD_DecodeCharacter(unsigned char c) {
         return c;
     }
 
-    if (c == ' ') {
-        return 0xA0;
+    if ('0' <= c && c <= '9') {
+        return 0xb0 | (c & 0xf);
     }
 
-    return 0xBF; // Default to '?'
+    switch (c) {
+        case ' ':
+            return 0xA0;
+
+        case '#':
+            return 0xA3;
+
+        case '*':
+            return 0xAA;
+
+        default:
+            return 0xBF; // Default to '?'
+    }
 }

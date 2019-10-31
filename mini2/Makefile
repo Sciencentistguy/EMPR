@@ -33,7 +33,7 @@ CMSISFL=$(CMSIS)/lib/core_cm3.o \
 		$(CMSIS)/lib/startup_LPC17xx.o
 LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 
-CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 -std=gnu99 -O3 \
+CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 -std=gnu99 \
 	   -msoft-float  -gdwarf-2  -mno-sched-prolog  -fno-hosted  -mtune=cortex-m3 \
 	   -march=armv7-m  -mfix-cortex-m3-ldrd   -ffunction-sections  -fdata-sections \
 	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I.
@@ -49,7 +49,7 @@ LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 EXECNAME	= bin/main
 
 # Source files provided by the user to build the project
-OBJ		= main.o led.o serial.o lcd.o
+OBJ		= main.o led.o serial.o lcd.o keypad.o
 
 # Commands handled by this makefile
 all:	main
