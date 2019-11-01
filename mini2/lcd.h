@@ -11,4 +11,5 @@ unsigned char LCD_DecodeCharacter(unsigned char);
 void LCD_WriteString(char*);
 void LCD_WriteCharacter(unsigned char);
 void LCD_ResetPos();
+void LCD_WriteBuf(char*, int);
 void I2C_SweepBus();

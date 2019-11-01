@@ -9,5 +9,6 @@
 
 
 unsigned char KEYPAD_GetKeyPressed();
-void KEYPAD_Poll();
+unsigned char KEYPAD_GetBufferedKey();
+void KEYPAD_Init();
 unsigned char KEYPAD_ReceiveByte();

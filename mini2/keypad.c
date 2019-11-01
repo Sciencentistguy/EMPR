@@ -10,35 +10,13 @@
 
 
 
-void KEYPAD_Poll() {
+void KEYPAD_Init() {
     PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
     PINSEL_ConfigPin(&pinsel_CFG);
     pinsel_CFG.Pinnum = 1;
     PINSEL_ConfigPin(&pinsel_CFG);
     I2C_Init(LPC_I2C1, 100000);
     I2C_Cmd(LPC_I2C1, 1);
-    char buf[64];
-    LCD_Init();
-
-    for (;;) {
-        char keyPressed = KEYPAD_GetKeyPressed();
-
-        if (keyPressed != ' ') {
-            memset(buf, 0, sizeof(buf));
-            sprintf(buf, "Key pressed: %c\r\n", keyPressed);
-            SERIAL_WriteBuf(buf, sizeof(buf));
-
-            if (keyPressed == '*'){
-                LCD_ClearScreen();
-                LCD_ResetPos();
-
-            }else
-                LCD_WriteCharacter(keyPressed);
-
-            while (KEYPAD_GetKeyPressed() != ' ')
-                (void) 0;
-        }
-    }
 }
 
 
@@ -119,6 +97,16 @@ unsigned char DecodeLocation(unsigned char x, unsigned char y) {
     return ' ';
 }
 
+unsigned char KEYPAD_GetBufferedKey() {
+    unsigned char ret;
+    ret = KEYPAD_GetKeyPressed();
+
+    while (KEYPAD_GetKeyPressed() != ' ') {
+        (void)0;
+    }
+
+    return ret;
+}
 
 unsigned char KEYPAD_GetKeyPressed() {
     char addrs[4] = {COL0, COL1, COL2, COL3};
@@ -130,6 +118,8 @@ unsigned char KEYPAD_GetKeyPressed() {
         KEYPAD_SendByte(addrs[i]);
         rec[i] = KEYPAD_ReceiveByte();
     }
+
+    char ret;
 
     for (int i = 0; i < 4; i++) {
         switch (rec[i] & 0xf) {

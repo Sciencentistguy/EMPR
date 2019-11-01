@@ -17,7 +17,46 @@ char buf2[64];
 
 int main() {
     SERIAL_Init();
-    KEYPAD_Poll();
+    LCD_Init();
+    KEYPAD_Init();
+    I2C_SweepBus();
+
+    do {
+        (void) 0;
+    } while (KEYPAD_GetBufferedKey() != '*');
+
+    LCD_ClearScreen();
+    LCD_WriteString("Hello World");
+
+    do {
+        (void) 0;
+    } while (KEYPAD_GetBufferedKey() != '*');
+
+    LCD_ClearScreen();
+    LCD_WriteString("Hello\nWorld");
+
+    do {
+        (void) 0;
+    } while (KEYPAD_GetBufferedKey() != '*');
+
+    LCD_ClearScreen();
+
+    for (;;) {
+        char keyPressed = KEYPAD_GetKeyPressed();
+
+        if (keyPressed != ' ') {
+            if (keyPressed == '*') {
+                LCD_ClearScreen();
+                LCD_ResetPos();
+
+            } else {
+                LCD_WriteCharacter(keyPressed);
+            }
+
+            while (KEYPAD_GetKeyPressed() != ' ')
+                (void) 0;
+        }
+    }
 }
 
 

@@ -46,6 +46,11 @@ void LCD_SendBuf(unsigned char* buf, int size) {
     I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
 }
 
+void LCD_WriteBuf(char* str, int size){
+    for (int i = 0; i < size; i++) {
+        LCD_WriteChar(0x80+i, str[i]);
+    }
+}
 
 void LCD_WriteString(char* str) {
     char c, j;
