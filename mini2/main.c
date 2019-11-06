@@ -1,13 +1,16 @@
-#include "serial.h"
-#include "led.h"
-#include "lcd.h"
-#include "keypad.h"
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <lpc17xx_i2c.h>
 #include <lpc17xx_pinsel.h>
+
+#include "serial.h"
+#include "led.h"
+#include "lcd.h"
+#include "keypad.h"
+#include "delay.h"
+#include "i2c.h"
+
 
 
 char toggleFlag = 0;
@@ -16,29 +19,27 @@ char counter = 0;
 char buf2[64];
 
 int main() {
+    I2C_InitFunc();
     SERIAL_Init();
     LCD_Init();
     KEYPAD_Init();
     I2C_SweepBus();
-
-    do {
-        (void) 0;
-    } while (KEYPAD_GetBufferedKey() != '*');
-
+    delay(100);
+    //do {
+    //    (void) 0;
+    //} while (KEYPAD_GetBufferedKey() != '*');
     LCD_ClearScreen();
     LCD_WriteString("Hello World");
-
-    do {
-        (void) 0;
-    } while (KEYPAD_GetBufferedKey() != '*');
-
+    delay(100);
+    //do {
+    //    (void) 0;
+    //} while (KEYPAD_GetBufferedKey() != '*');
     LCD_ClearScreen();
     LCD_WriteString("Hello\nWorld");
-
-    do {
-        (void) 0;
-    } while (KEYPAD_GetBufferedKey() != '*');
-
+    delay(100);
+    //do {
+    //    (void) 0;
+    //} while (KEYPAD_GetBufferedKey() != '*');
     LCD_ClearScreen();
 
     for (;;) {

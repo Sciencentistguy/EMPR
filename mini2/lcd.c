@@ -6,6 +6,12 @@
 #include "serial.h"
 #include "lcd.h"
 
+//internal functions
+void LCD_SendByte(unsigned char byte);
+void LCD_SendBuf(unsigned char* buf, int size);
+unsigned char LCD_DecodeCharacter(unsigned char c);
+void LCD_WriteChar(unsigned char location, unsigned char character);
+
 char pos = 0;
 
 void LCD_Init() {
@@ -107,32 +113,6 @@ void LCD_WriteChar(unsigned char location, unsigned char character) {
     LCD_SendBuf(buf, sizeof(buf));
 }
 
-void I2C_SweepBus() {
-    unsigned char buf;
-    I2C_M_SETUP_Type t;
-    int j = 0;
-    char buf2[64];
-
-    for (int i = 0; i < 128; i++) {
-        t.sl_addr7bit = i & 0b1111111;
-        t.tx_data = &buf;
-        t.tx_length = sizeof(buf);
-        t.retransmissions_max = 2;
-        t.rx_length = 0;
-        t.rx_data = NULL;
-
-        if (I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING) == SUCCESS) {
-            memset(buf2, 0, sizeof(buf2));
-            sprintf(buf2, "There is something on address %i\r\n", i);
-            SERIAL_WriteBuf(buf2, sizeof(buf2));
-            j++;
-        }
-    }
-
-    memset(buf2, 0, sizeof(buf2));
-    sprintf(buf2, "There are %i devices connected to the I2C bus.\r\n", j);
-    SERIAL_WriteBuf(buf2, sizeof(buf2));
-}
 
 unsigned char LCD_DecodeCharacter(unsigned char c) {
     if ('A' <= c && c <= 'Z') {

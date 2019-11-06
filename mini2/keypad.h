@@ -7,8 +7,19 @@
 #define COL2 0xdf
 #define COL3 0xef
 
-
-unsigned char KEYPAD_GetKeyPressed();
-unsigned char KEYPAD_GetBufferedKey();
+/**
+ * Initialise the keypad
+ */
 void KEYPAD_Init();
-unsigned char KEYPAD_ReceiveByte();
+
+/**
+ * Get the current key being pressed
+ */
+unsigned char KEYPAD_GetKeyPressed();
+
+/**
+ * Get the current key being pressed, but return when the key is released
+ */
+unsigned char KEYPAD_GetBufferedKey();
+
+

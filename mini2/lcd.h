@@ -2,14 +2,36 @@
 
 #define LCD_ADDR 59
 
+
+/**
+ * Initialise the LCD
+ */
 void LCD_Init();
-void LCD_WriteChar(unsigned char, unsigned char);
+
+/**
+ * Write a single character to the LCD
+ */
+void LCD_WriteCharacter(unsigned char character);
+
+/**
+ * Clear the LCD screen
+ */
 void LCD_ClearScreen();
-void LCD_SendByte(unsigned char);
-void LCD_SendBuf(unsigned char*, int);
-unsigned char LCD_DecodeCharacter(unsigned char);
-void LCD_WriteString(char*);
-void LCD_WriteCharacter(unsigned char);
+
+/**
+ * Write a c-string literal (char*) to the lcd.
+ * A '\\n' character will move to the beginning of the next line.
+ */
+void LCD_WriteString(char* str);
+
+/**
+ * Reset the position on the LCD screen
+ * To be used with LCD_WriteCharacter()
+ */
 void LCD_ResetPos();
-void LCD_WriteBuf(char*, int);
-void I2C_SweepBus();
+
+/**
+ * Write a buffer (char*) to the LCD
+ */
+void LCD_WriteBuf(char* buf, int size);
+
