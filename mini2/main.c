@@ -24,22 +24,13 @@ int main() {
     LCD_Init();
     KEYPAD_Init();
     I2C_SweepBus();
-    delay(100);
-    //do {
-    //    (void) 0;
-    //} while (KEYPAD_GetBufferedKey() != '*');
+    delay(150);
     LCD_ClearScreen();
     LCD_WriteString("Hello World");
-    delay(100);
-    //do {
-    //    (void) 0;
-    //} while (KEYPAD_GetBufferedKey() != '*');
+    delay(150);
     LCD_ClearScreen();
     LCD_WriteString("Hello\nWorld");
-    delay(100);
-    //do {
-    //    (void) 0;
-    //} while (KEYPAD_GetBufferedKey() != '*');
+    delay(150);
     LCD_ClearScreen();
 
     for (;;) {
