@@ -52,9 +52,9 @@ void LCD_SendBuf(unsigned char* buf, int size) {
     I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
 }
 
-void LCD_WriteBuf(char* str, int size){
+void LCD_WriteBuf(char* str, int size) {
     for (int i = 0; i < size; i++) {
-        LCD_WriteChar(0x80+i, str[i]);
+        LCD_WriteChar(0x80 + i, str[i]);
     }
 }
 
@@ -78,8 +78,8 @@ void LCD_WriteString(char* str) {
     };
 }
 
-void LCD_ResetPos(){
-    pos=0x80;
+void LCD_ResetPos() {
+    pos = 0x80;
 }
 
 void LCD_WriteCharacter(unsigned char c) {
@@ -136,6 +136,18 @@ unsigned char LCD_DecodeCharacter(unsigned char c) {
 
         case '*':
             return 0xAA;
+
+        case '+':
+            return 0xAB;
+
+        case '-':
+            return 0xAD;
+
+        case '/':
+            return 0xAF;
+
+        case '=':
+            return 0xBD;
 
         default:
             return 0xBF; // Default to '?'
