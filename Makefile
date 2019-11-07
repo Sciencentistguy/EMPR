@@ -2,7 +2,7 @@
 
 # Ensure consistent environment
 SHELL := /bin/bash
-PATH := /opt/york/cs/net/bin:$(PATH)
+#PATH := /opt/york/cs/net/bin:$(PATH)
 
 # Path to the GCC toolbox
 PKG=/opt/york/cs/net
@@ -33,10 +33,10 @@ CMSISFL=$(CMSIS)/lib/core_cm3.o \
 		$(CMSIS)/lib/startup_LPC17xx.o
 LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 
-CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 -std=gnu99 -O3 \
+CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 -std=gnu99 \
 	   -msoft-float  -gdwarf-2  -mno-sched-prolog  -fno-hosted  -mtune=cortex-m3 \
 	   -march=armv7-m  -mfix-cortex-m3-ldrd   -ffunction-sections  -fdata-sections \
-	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I.
+	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I../libs -I.
 
 LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 		-Wl,--start-group -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2) \
@@ -46,18 +46,38 @@ LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 
 # Name of the binary being built
-EXECNAME	= bin/main
+EXECNAME	= bin/exec
 
 # Source files provided by the user to build the project
-OBJ		= main.o led.o serial.o
+LIBS		= libs/led.o libs/serial.o libs/i2c.o libs/lcd.o libs/keypad.o libs/delay.o libs/utils.o
+OBJ1		= $(LIBS) mini1.o
+OBJ2		= $(LIBS) mini2.o
+OBJCALC		= $(LIBS) calculator.o
+OBJ3		= $(LIBS) mini3.o
 
-# Commands handled by this makefile
-all:	main
-	@echo "Build finished"
+#all:	main
+#	@echo "Build finished"
 
-main: $(OBJ)
-	mkdir -p bin # prevent error "No such file or directory" during linking
-	$(CC) -o $(EXECNAME) $(OBJ) $(LDFLAGS)
+libs: $(LIBS)
+
+mini1: $(OBJ1)
+	mkdir -p bin
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJ1) $(LDFLAGS)
+	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
+
+mini2: $(OBJ2)
+	mkdir -p bin
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJ2) $(LDFLAGS)
+	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
+
+calc: $(OBJCALC)
+	mkdir -p bin
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJCALC) $(LDFLAGS)
+	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
+
+mini3: $(OBJ3)
+	mkdir -p bin
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJ3) $(LDFLAGS)
 	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
 
 # make clean - Clean out the source tree ready to re-build the project
@@ -78,3 +98,6 @@ install:
 	cp $(EXECNAME).bin /media/$(USER)/MBED &
 	sync
 	@echo "Now press the reset button on all MBED file systems"
+
+version:
+	$(CC) --version

@@ -1,9 +1,10 @@
-#include "serial.h"
-#include "led.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <lpc17xx_systick.h>
+
+#include "libs/serial.h"
+#include "libs/led.h"
 
 char toggleFlag = 0;
 char secondCounter = 0;
@@ -13,13 +14,11 @@ int main() {
     SYSTICK_Cmd(ENABLE);
     SYSTICK_IntCmd(ENABLE);
     SYSTICK_InternalInit(100);
-//    GPIO_SetDir(1, ALL_LEDS, 1);
-    serial_init();
+    SERIAL_Init();
     char buf[20];
     memset(buf, 0, sizeof(buf));
     sprintf(buf, "Starting Count\r\n");
-    write_usb_serial_blocking(buf, sizeof(buf));
-
+    SERIAL_WriteBuf(buf, sizeof(buf));
     for (;;);
 }
 
@@ -34,12 +33,12 @@ void SysTick_Handler() {
 
     if (++counter > 16) {
         for (int i = 0; i < 4; i++)
-            SetLED(i, 0);
+            LED_SetLED(i, 0);
 
         char buf[16];
         memset(buf, 0, sizeof(buf));
         sprintf(buf, "Finished Count\r\n");
-        write_usb_serial_blocking(buf, sizeof(buf));
+        SERIAL_WriteBuf(buf, sizeof(buf));
         exit(0);
     }
 }
