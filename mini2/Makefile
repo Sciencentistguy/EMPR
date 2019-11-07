@@ -36,7 +36,7 @@ LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 -std=gnu99 \
 	   -msoft-float  -gdwarf-2  -mno-sched-prolog  -fno-hosted  -mtune=cortex-m3 \
 	   -march=armv7-m  -mfix-cortex-m3-ldrd   -ffunction-sections  -fdata-sections \
-	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I.
+	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I../libs -I.
 
 LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 		-Wl,--start-group -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2) \
@@ -49,7 +49,7 @@ LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 EXECNAME	= bin/main
 
 # Source files provided by the user to build the project
-OBJ		= main.o led.o serial.o i2c.o lcd.o keypad.o delay.o utils.o
+OBJ		= main.o ../libs/led.o ../libs/serial.o ../libs/i2c.o ../libs/lcd.o ../libs/keypad.o ../libs/delay.o ../libs/utils.o
 
 # Commands handled by this makefile
 all:	main
@@ -63,6 +63,7 @@ main: $(OBJ)
 # make clean - Clean out the source tree ready to re-build the project
 clean:
 	rm -f `find . | grep \~`
+	rm -f `find ~/Git/EMPR -name *.o`
 	rm -f *.swp *.o */*.o */*/*.o  *.log
 	rm -f *.d */*.d *.srec */*.a bin/*.map
 	rm -f *.elf *.wrn bin/*.bin log *.hex
