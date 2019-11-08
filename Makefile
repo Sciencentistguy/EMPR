@@ -11,7 +11,7 @@ PKG=/opt/york/cs/net
 # OBJCOPY converts the resulting program binary into a format we can load
 # into the MBED board
 ARCH=arm-none-eabi
-CC=$(ARCH)-gcc
+CC=/usr/bin/$(ARCH)-gcc
 OBJCOPY=$(ARCH)-objcopy
 
 # Due to a change in 2012 Linux, we now need to set a user name variable in the
@@ -49,7 +49,7 @@ LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 EXECNAME	= bin/exec
 
 # Source files provided by the user to build the project
-LIBS		= libs/led.o libs/serial.o libs/i2c.o libs/lcd.o libs/keypad.o libs/delay.o libs/utils.o
+LIBS		= libs/led.o libs/serial.o libs/i2c.o libs/lcd.o libs/keypad.o libs/delay.o libs/utils.o libs/adc.o
 OBJ1		= $(LIBS) mini1.o
 OBJ2		= $(LIBS) mini2.o
 OBJCALC		= $(LIBS) calculator.o

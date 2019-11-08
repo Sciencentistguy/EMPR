@@ -1,5 +1,9 @@
 #include <string.h>
 
+void zero(void* buf) {
+    memset(buf, 0, sizeof(buf));
+}
+
 char* CharToBinary(unsigned char i) {
     static char buf[8];
     memset(buf, '0', sizeof(buf));
