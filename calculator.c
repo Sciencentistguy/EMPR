@@ -9,8 +9,6 @@
 #include "libs/led.h"
 #include "libs/lcd.h"
 #include "libs/keypad.h"
-#include "libs/delay.h"
-#include "libs/i2c.h"
 
 
 
@@ -23,7 +21,6 @@ char buf2[64];
 int calculate(char*);
 
 int main() {
-    I2C_InitFunc();
     SERIAL_Init();
     LCD_Init();
     KEYPAD_Init();
@@ -135,8 +132,4 @@ int calculate(char* input) {
     }
 
     return result;
-}
-
-void SysTick_Handler() {
-    //stub
 }

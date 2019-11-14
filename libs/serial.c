@@ -1,8 +1,9 @@
 #include <lpc17xx_uart.h>
 #include <lpc17xx_pinsel.h>
 #include <string.h>
-#include "lpc_types.h"
+
 #include "serial.h"
+#include "pinsel.h"
 
 
 void SERIAL_ReadBuf(char* buf, int length) {
@@ -20,10 +21,8 @@ void SERIAL_WriteString(char* str) {
 void SERIAL_Init(void) {
     UART_CFG_Type UARTConfigStruct;
     UART_FIFO_CFG_Type UARTFIFOConfigStruct;
-    PINSEL_CFG_Type PinCfg = {.Funcnum = 1, .OpenDrain = 0, .Pinmode = 0, .Portnum = 0, .Pinnum = 2};
-    PINSEL_ConfigPin(&PinCfg);
-    PinCfg.Pinnum = 3;
-    PINSEL_ConfigPin(&PinCfg);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_2, PINSEL_FUNC_1);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_3, PINSEL_FUNC_1);
     /*  Initialize UART Configuration parameter structure to default state:
         - Baudrate = 9600bps
         - 8 data bit

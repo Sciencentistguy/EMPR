@@ -13,8 +13,6 @@
 #include "libs/led.h"
 #include "libs/lcd.h"
 #include "libs/keypad.h"
-#include "libs/delay.h"
-#include "libs/i2c.h"
 #include "libs/utils.h"
 #include "libs/adc.h"
 #include "libs/dac.h"

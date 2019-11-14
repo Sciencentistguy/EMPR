@@ -5,16 +5,11 @@
 
 #include "dac.h"
 #include "utils.h"
+#include "pinsel.h"
 
 
 void DAC_InitFunc() {
-    PINSEL_CFG_Type t;
-    t.Funcnum = 2;
-    t.OpenDrain = 0;
-    t.Pinmode = 0;
-    t.Pinnum = 26;
-    t.Portnum = 0;
-    PINSEL_ConfigPin(&t);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_26, PINSEL_FUNC_2);
     DAC_Init(LPC_DAC);
 }
 
@@ -41,7 +36,7 @@ void GPDMA_InitFunc(uint32_t* Source, GPDMA_LLI_Type* DMA_Struct, GPDMA_Channel_
     GPDMA_Cfg->TransferType = GPDMA_TRANSFERTYPE_M2P;
     GPDMA_Cfg->SrcConn = 0;
     GPDMA_Cfg->DstConn = GPDMA_CONN_DAC; //Point give data to the DAC converter memory address
-    GPDMA_Cfg->DMALLI = (uint32_t)DMA_Struct;//Maybe try changing this back
+    GPDMA_Cfg->DMALLI = (uint32_t)DMA_Struct;
     GPDMA_Setup(GPDMA_Cfg);
 }
 

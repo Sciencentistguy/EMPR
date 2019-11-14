@@ -1,6 +1,8 @@
 #include <lpc17xx_adc.h>
 #include <lpc17xx_pinsel.h>
+
 #include "adc.h"
+#include "pinsel.h"
 
 
 double ADC_ToVoltage(double adcOutpt) {
@@ -8,13 +10,7 @@ double ADC_ToVoltage(double adcOutpt) {
 }
 
 void ADC_InitFunc() {
-    PINSEL_CFG_Type t;
-    t.Funcnum = 1;
-    t.OpenDrain = 0;
-    t.Pinmode = 0;
-    t.Portnum = 0;
-    t.Pinnum = 24;
-    PINSEL_ConfigPin(&t);
+    PINSEL_Enable(PINSEL_PORT_1, PINSEL_PIN_24, PINSEL_FUNC_1);
     ADC_Init(LPC_ADC, 200000);
     ADC_ChannelCmd(LPC_ADC, ADC_CHANNEL, ENABLE);
     ADC_BurstCmd(LPC_ADC, ENABLE);

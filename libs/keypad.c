@@ -1,22 +1,21 @@
-#include "keypad.h"
-#include "serial.h"
-#include "led.h"
-#include "lcd.h"
-
 #include <lpc17xx_i2c.h>
 #include <lpc17xx_pinsel.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "keypad.h"
+#include "serial.h"
+#include "led.h"
+#include "lcd.h"
+#include "pinsel.h"
 
 // Internal functions
 unsigned char KEYPAD_ReceiveByte();
 unsigned char DecodeLocation(unsigned char x, unsigned char y);
 
 void KEYPAD_Init() {
-    PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
-    PINSEL_ConfigPin(&pinsel_CFG);
-    pinsel_CFG.Pinnum = 1;
-    PINSEL_ConfigPin(&pinsel_CFG);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_0, PINSEL_FUNC_3);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_1, PINSEL_FUNC_3);
     I2C_Init(LPC_I2C1, 100000);
     I2C_Cmd(LPC_I2C1, 1);
 }

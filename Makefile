@@ -34,14 +34,17 @@ CMSISFL=$(CMSIS)/lib/core_cm3.o \
 		$(CMSIS)/lib/startup_LPC17xx.o
 LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 
-CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O3  -mapcs-frame  -D__thumb2__=1 -std=gnu18 \
-	   -msoft-float  -gdwarf-2  -mno-sched-prolog  -fno-hosted  -mtune=cortex-m3 \
-	   -march=armv7-m  -mfix-cortex-m3-ldrd   -ffunction-sections  -fdata-sections \
-	   -D__RAM_MODE__=0 $(CMSISINCLUDES) -I../libs -I.
+WARN= -Wall
+
+CFLAGS= -O3 -std=gnu18 $(WARN) \
+		-mcpu=cortex-m3 -mthumb -mapcs-frame -D__thumb2__=1 -msoft-float -gdwarf-2\
+		-mno-sched-prolog -fno-hosted -mtune=cortex-m3 -march=armv7-m \
+		-mfix-cortex-m3-ldrd -ffunction-sections -fdata-sections \
+		-D__RAM_MODE__=0 $(CMSISINCLUDES) -I../libs -I.
 
 LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 		-Wl,--start-group -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2) \
-		-lc -lg -lstdc++ -lsupc++  -lgcc -lm  -Wl,--end-group \
+		-lc -lg -lstdc++ -lsupc++ -lgcc -lm -Wl,--end-group \
 		-Xlinker -Map -Xlinker bin/lpc1700.map -Xlinker -T $(LDSCRIPT)
 
 LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
@@ -50,7 +53,7 @@ LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 EXECNAME	= bin/exec
 
 # Source files provided by the user to build the project
-LIBS		= libs/led.o libs/serial.o libs/i2c.o libs/lcd.o libs/keypad.o libs/delay.o libs/utils.o libs/adc.o libs/dac.o
+LIBS		= libs/led.o libs/serial.o libs/lcd.o libs/keypad.o libs/utils.o libs/adc.o libs/dac.o libs/pinsel.o libs/timer.o
 OBJ1		= $(LIBS) mini1.o
 OBJ2		= $(LIBS) mini2.o
 OBJCALC		= $(LIBS) calculator.o
@@ -84,7 +87,7 @@ mini3: $(OBJ3)
 # make clean - Clean out the source tree ready to re-build the project
 clean:
 	rm -f `find . | grep \~`
-	rm -f *.swp *.o */*.o */*/*.o  *.log
+	rm -f *.swp *.o */*.o */*/*.o *.log
 	rm -f *.d */*.d *.srec */*.a bin/*.map
 	rm -f *.elf *.wrn bin/*.bin log *.hex
 	rm -f $(EXECNAME)

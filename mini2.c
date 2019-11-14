@@ -5,13 +5,12 @@
 #include <lpc17xx_pinsel.h>
 
 #include "libs/serial.h"
+#include "libs/utils.h"
 #include "libs/led.h"
 #include "libs/lcd.h"
 #include "libs/keypad.h"
-#include "libs/delay.h"
-#include "libs/i2c.h"
-
-
+#include "libs/pinsel.h"
+#include "libs/timer.h"
 
 char toggleFlag = 0;
 char secondCounter = 0;
@@ -21,18 +20,17 @@ char buf2[64];
 void I2C_SweepBus();
 
 int main() {
-    I2C_InitFunc();
     SERIAL_Init();
     LCD_Init();
     KEYPAD_Init();
     I2C_SweepBus();
-    delay(150);
+    TIMER_Delay(1000);
     LCD_ClearScreen();
     LCD_WriteString("Hello World");
-    delay(150);
+    TIMER_Delay(1000);
     LCD_ClearScreen();
     LCD_WriteString("Hello\nWorld");
-    delay(150);
+    TIMER_Delay(1000);
     LCD_ClearScreen();
 
     for (;;) {
@@ -54,6 +52,10 @@ int main() {
 }
 
 void I2C_SweepBus() {
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_0, PINSEL_FUNC_3);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_1, PINSEL_FUNC_3);
+    I2C_Init(LPC_I2C1, 100000);
+    I2C_Cmd(LPC_I2C1, 1);
     unsigned char buf;
     I2C_M_SETUP_Type t;
     int j = 0;
@@ -75,8 +77,4 @@ void I2C_SweepBus() {
     memset(buf2, 0, sizeof(buf2));
     sprintf(buf2, "There are %i devices connected to the I2C bus.\r\n", j);
     SERIAL_WriteBuf(buf2, sizeof(buf2));
-}
-
-void SysTick_Handler() {
-    //stub
 }

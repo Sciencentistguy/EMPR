@@ -1,7 +1,7 @@
 #include <string.h>
 
-void delay(unsigned long tick) {
-    for (unsigned long j = 0; j < tick; j++) {
+void delay(int tick) {
+    for (int j = 0; j < tick; j++) {
         for (unsigned int i = 0; i < 0x10000; i++) {
             (void) 0;
         }
@@ -13,8 +13,9 @@ void zero(void* buf) {
 }
 
 char* CharToBinary(unsigned char i) {
-    static char buf[8];
+    static char buf[9];
     memset(buf, '0', sizeof(buf));
+    buf[8] = '\0';
 
     if (i & 1 << 7) {
         buf[0] = '1';

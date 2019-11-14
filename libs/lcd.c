@@ -5,6 +5,7 @@
 
 #include "serial.h"
 #include "lcd.h"
+#include "pinsel.h"
 
 //internal functions
 void LCD_SendByte(unsigned char byte);
@@ -15,10 +16,8 @@ void LCD_WriteChar(unsigned char location, unsigned char character);
 char pos = 0;
 
 void LCD_Init() {
-    PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
-    PINSEL_ConfigPin(&pinsel_CFG);
-    pinsel_CFG.Pinnum = 1;
-    PINSEL_ConfigPin(&pinsel_CFG);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_0, PINSEL_FUNC_3);
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_1, PINSEL_FUNC_3);
     I2C_Init(LPC_I2C1, 100000);
     I2C_Cmd(LPC_I2C1, 1);
     unsigned char data[16];

@@ -19,6 +19,7 @@ int main() {
     memset(buf, 0, sizeof(buf));
     sprintf(buf, "Starting Count\r\n");
     SERIAL_WriteBuf(buf, sizeof(buf));
+
     for (;;);
 }
 
