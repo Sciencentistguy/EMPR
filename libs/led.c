@@ -15,6 +15,7 @@ void LED_Clear() {
 
 void LED_WriteInt(int number) {
     LED_Clear();
+
     if (number & 0b1000) {
         LED_SetLED(3, 1);
     }

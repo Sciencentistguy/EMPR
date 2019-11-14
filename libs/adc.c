@@ -7,7 +7,7 @@ double ADC_ToVoltage(double adcOutpt) {
     return (adcOutpt / (double) 4095) * 3.3;
 }
 
-void ADC_InitFunc(){
+void ADC_InitFunc() {
     PINSEL_CFG_Type t;
     t.Funcnum = 1;
     t.OpenDrain = 0;
@@ -21,5 +21,5 @@ void ADC_InitFunc(){
 }
 
 double ADC_GetVoltage() {
-        return ADC_ToVoltage(ADC_ChannelGetData(LPC_ADC, ADC_CHANNEL));
+    return ADC_ToVoltage(ADC_ChannelGetData(LPC_ADC, ADC_CHANNEL));
 }

@@ -8,18 +8,17 @@
 #define COL3 0xef
 
 /**
- * Initialise the keypad
- */
+    Initialise the keypad
+*/
 void KEYPAD_Init();
 
 /**
- * Get the current key being pressed
- */
+    Get the current key being pressed
+*/
 unsigned char KEYPAD_GetKeyPressed();
 
 /**
- * Get the current key being pressed, but return when the key is released
- */
+    Get the current key being pressed, but return when the key is released
+*/
 unsigned char KEYPAD_GetBufferedKey();
-
 

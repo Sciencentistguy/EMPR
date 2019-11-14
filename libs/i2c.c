@@ -5,7 +5,7 @@
 
 #include "serial.h"
 
-void I2C_InitFunc(){
+void I2C_InitFunc() {
     PINSEL_CFG_Type pinsel_CFG = {.Portnum = 0, .Pinnum = 0, .Funcnum = 3, .OpenDrain = 0};
     PINSEL_ConfigPin(&pinsel_CFG);
     pinsel_CFG.Pinnum = 1;
