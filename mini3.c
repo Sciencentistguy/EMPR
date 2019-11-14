@@ -38,7 +38,7 @@ void IRQInit() {
     //key = ' ';
     //buttonpress = 0;
     //NVIC_SetPriority(EINT3_IRQn, 0x00);
-    PIO_IntCmd(0, 1 << 23, 1);
+    GPIO_IntCmd(0, 1 << 23, 1);
     NVIC_EnableIRQ(EINT3_IRQn);
     __enable_irq();
 }
