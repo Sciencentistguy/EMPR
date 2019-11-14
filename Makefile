@@ -2,7 +2,8 @@
 
 # Ensure consistent environment
 SHELL := /bin/bash
-#PATH := /opt/york/cs/net/bin:$(PATH)
+PATH := /opt/york/cs/net/gcc-arm-9.2.0/bin:$(PATH)
+
 
 # Path to the GCC toolbox
 PKG=/opt/york/cs/net
@@ -11,7 +12,7 @@ PKG=/opt/york/cs/net
 # OBJCOPY converts the resulting program binary into a format we can load
 # into the MBED board
 ARCH=arm-none-eabi
-CC=/usr/bin/$(ARCH)-gcc
+CC=$(ARCH)-gcc
 OBJCOPY=$(ARCH)-objcopy
 
 # Due to a change in 2012 Linux, we now need to set a user name variable in the
