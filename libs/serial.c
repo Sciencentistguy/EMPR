@@ -1,6 +1,8 @@
 #include <lpc17xx_uart.h>
 #include <lpc17xx_pinsel.h>
 #include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "serial.h"
 #include "pinsel.h"
@@ -12,6 +14,15 @@ void SERIAL_ReadBuf(char* buf, int length) {
 
 void SERIAL_WriteBuf(char* buf, int length) {
     UART_Send(LPC_UART0, (unsigned char*)buf, length, BLOCKING);
+}
+
+void SERIAL_Printf(char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    char buf[strlen(fmt)];
+    vsprintf(buf, fmt, ap);
+    SERIAL_WriteString(buf);
+    va_end(ap);
 }
 
 void SERIAL_WriteString(char* str) {

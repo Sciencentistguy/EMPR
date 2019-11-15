@@ -6,6 +6,11 @@
 void SERIAL_Init();
 
 /**
+    Analogous to printf() buf for the serial connection
+*/
+void SERIAL_Printf(char* fmt, ...);
+
+/**
     Read a buffer (char*) from serial
 */
 void SERIAL_ReadBuf(char* buf, int size);

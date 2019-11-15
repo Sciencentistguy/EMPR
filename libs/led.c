@@ -2,8 +2,10 @@
 #include <string.h>
 #include <lpc17xx_gpio.h>
 #include <lpc17xx_systick.h>
+
 #include "serial.h"
 #include "led.h"
+#include "gpio.h"
 
 
 void LED_Clear() {
@@ -36,23 +38,23 @@ void LED_WriteInt(int number) {
 void LED_SetLED(int led, int state) {
     switch (led) {
         case 0:
-            GPIO_SetDir(1, LED0, 1);
-            state ? GPIO_SetValue(1, LED0) : GPIO_ClearValue(1, LED0);
+            GPIO_Init(1, 18, GPIO_DIRECTION_OUTPUT);
+            GPIO_SetPin(1, 18, state);
             break;
 
         case 1:
-            GPIO_SetDir(1, LED1, 1);
-            state ? GPIO_SetValue(1, LED1) : GPIO_ClearValue(1, LED1);
+            GPIO_Init(1, 20, GPIO_DIRECTION_OUTPUT);
+            GPIO_SetPin(1, 20, state);
             break;
 
         case 2:
-            GPIO_SetDir(1, LED2, 1);
-            state ? GPIO_SetValue(1, LED2) : GPIO_ClearValue(1, LED2);
+            GPIO_Init(1, 21, GPIO_DIRECTION_OUTPUT);
+            GPIO_SetPin(1, 21, state);
             break;
 
         case 3:
-            GPIO_SetDir(1, LED3, 1);
-            state ? GPIO_SetValue(1, LED3) : GPIO_ClearValue(1, LED3);
+            GPIO_Init(1, 23, GPIO_DIRECTION_OUTPUT);
+            GPIO_SetPin(1, 23, state);
             break;
     }
 }

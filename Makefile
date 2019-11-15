@@ -53,7 +53,8 @@ LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 EXECNAME	= bin/exec
 
 # Source files provided by the user to build the project
-LIBS		= libs/led.o libs/serial.o libs/lcd.o libs/keypad.o libs/utils.o libs/adc.o libs/dac.o libs/pinsel.o libs/timer.o
+LIBSC		= libs/*.c
+LIBS		= $(shell echo $(LIBSC) | sed s/\\.c/\\.o/g)
 OBJ1		= $(LIBS) mini1.o
 OBJ2		= $(LIBS) mini2.o
 OBJCALC		= $(LIBS) calculator.o
