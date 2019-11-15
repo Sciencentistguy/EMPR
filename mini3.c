@@ -16,13 +16,13 @@
 #include "libs/utils.h"
 #include "libs/adc.h"
 #include "libs/dac.h"
-
+#include "libs/timer.h"
 
 char buf[128];
 
 
-
 int main() {
+    TIMER_EnableSysTick();
     ADC_InitFunc();
     SERIAL_Init();
     KEYPAD_Init();
@@ -40,8 +40,7 @@ int main() {
 
     DAC_SineWave(3000, 2.5);
 
-    while (KEYPAD_GetKeyPressed() != 'A')
-        (void) 0;
+    TIMER_Delay(5*1000);
 
     DAC_SineWave(4000, 1.5);
 
@@ -49,8 +48,3 @@ int main() {
 }
 
 void EINT3_IRQHandler();
-
-
-void SysTick_Handler() {
-    //stub
-}

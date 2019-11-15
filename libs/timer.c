@@ -8,8 +8,9 @@ static int RIT_dt = 0;
 
 
 void TIMER_EnableSysTick() {
-    SYSTICK_InternalInit(100);
-    //SysTick_Config(SystemCoreClock / 10000);
+    SYSTICK_Cmd(ENABLE);
+    SYSTICK_IntCmd(ENABLE);
+    SysTick_Config(SystemCoreClock / 10000);
 }
 
 void TIMER_EnableRIT(int dt) {
