@@ -58,6 +58,7 @@ OBJ1		= $(LIBS) mini1.o
 OBJ2		= $(LIBS) mini2.o
 OBJCALC		= $(LIBS) calculator.o
 OBJ3		= $(LIBS) mini3.o
+OBJINT		= $(LIBS) int.o
 
 #all:	main
 #	@echo "Build finished"
@@ -82,6 +83,11 @@ calc: $(OBJCALC)
 mini3: $(OBJ3)
 	mkdir -p bin
 	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJ3) $(LDFLAGS)
+	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
+
+int: $(OBJINT)
+	mkdir -p bin
+	/opt/york/cs/net/bin/arm-none-eabi-gcc -o $(EXECNAME) $(OBJINT) $(LDFLAGS)
 	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin
 
 # make clean - Clean out the source tree ready to re-build the project

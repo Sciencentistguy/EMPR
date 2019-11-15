@@ -16,10 +16,12 @@ char toggleFlag = 0;
 char secondCounter = 0;
 char counter = 0;
 char buf2[64];
+extern volatile unsigned long SysTick_on;
 
 void I2C_SweepBus();
 
 int main() {
+    TIMER_EnableSysTick();
     SERIAL_Init();
     LCD_Init();
     KEYPAD_Init();
