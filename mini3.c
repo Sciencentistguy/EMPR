@@ -46,5 +46,3 @@ int main() {
 
     for (;;);
 }
-
-void EINT3_IRQHandler();

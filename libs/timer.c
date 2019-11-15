@@ -5,6 +5,7 @@
 
 volatile unsigned long SysTick_on = 0;
 static int RIT_dt = 0;
+static int cooldown_count;
 
 
 void TIMER_EnableSysTick() {
@@ -44,10 +45,18 @@ int TIMER_RITGetStatus() {
 void TIMER_Delay(int n) {
     n = n * 10; //Factor in the change to the systick period
     //Maintains the time in ms semantics.
-    unsigned long SysTick_count;
-    SysTick_count = SysTick_on;
+    unsigned long SysTick_count = SysTick_on;
 
     while ((SysTick_on - SysTick_count) < n);
+}
+
+void TIMER_StartCooldown(int n) {
+    n *= 10;
+    cooldown_count = SysTick_on;
+}
+
+int TIMER_CheckCooldown(int n) {
+    return !(((SysTick_on - cooldown_count) < n));
 }
 
 void TIMER_DelayCallback(int n, timer_callback callback) {

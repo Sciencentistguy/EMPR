@@ -42,3 +42,6 @@ void TIMER_Delay(int ms);
     Delay for an amount of ms before calling the function pointer `callbackPtr` then returning control
 */
 void TIMER_DelayCallback(int ms, timer_callback callbackPtr);
+
+int TIMER_CheckCooldown();
+void TIMER_StartCooldown(int n);
