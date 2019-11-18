@@ -15,10 +15,7 @@ int main() {
     SYSTICK_IntCmd(ENABLE);
     SYSTICK_InternalInit(100);
     SERIAL_Init();
-    char buf[20];
-    memset(buf, 0, sizeof(buf));
-    sprintf(buf, "Starting Count\r\n");
-    SERIAL_WriteBuf(buf, sizeof(buf));
+    SERIAL_WriteString("Starting Count.\r\n");
 
     for (;;);
 }
@@ -36,10 +33,7 @@ void SysTick_Handler() {
         for (int i = 0; i < 4; i++)
             LED_SetLED(i, 0);
 
-        char buf[16];
-        memset(buf, 0, sizeof(buf));
-        sprintf(buf, "Finished Count\r\n");
-        SERIAL_WriteBuf(buf, sizeof(buf));
+        SERIAL_WriteString("Finished Count");
         exit(0);
     }
 }

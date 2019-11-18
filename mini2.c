@@ -76,7 +76,5 @@ void I2C_SweepBus() {
         }
     }
 
-    memset(buf2, 0, sizeof(buf2));
-    sprintf(buf2, "There are %i devices connected to the I2C bus.\r\n", j);
-    SERIAL_WriteBuf(buf2, sizeof(buf2));
+    SERIAL_Printf("There are %i devices connected to the I2C bus.\r\n", j);
 }

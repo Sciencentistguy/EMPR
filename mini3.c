@@ -29,9 +29,7 @@ int main() {
     DAC_InitFunc();
 
     while (1) {
-        zero(buf);
-        sprintf(buf, "Current voltage: %fV\r\n", ADC_GetVoltage());
-        SERIAL_WriteBuf(buf, sizeof(buf));
+        SERIAL_Printf("Current voltage: %fV\r\n", ADC_GetVoltage());
 
         if (KEYPAD_GetKeyPressed() == 'B') {
             break;
@@ -39,9 +37,7 @@ int main() {
     }
 
     DAC_SineWave(3000, 2.5);
-
-    TIMER_Delay(5*1000);
-
+    TIMER_Delay(5 * 1000);
     DAC_SineWave(4000, 1.5);
 
     for (;;);
