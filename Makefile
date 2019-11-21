@@ -36,7 +36,7 @@ LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 
 WARN= -Wall
 
-CFLAGS= -O3 -std=gnu18 $(WARN) \
+CFLAGS= -O0 -std=gnu18 $(WARN) \
 		-mcpu=cortex-m3 -mthumb -mapcs-frame -D__thumb2__=1 -msoft-float -gdwarf-2\
 		-mno-sched-prolog -fno-hosted -mtune=cortex-m3 -march=armv7-m \
 		-mfix-cortex-m3-ldrd -ffunction-sections -fdata-sections \

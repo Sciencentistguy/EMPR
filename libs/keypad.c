@@ -1,5 +1,6 @@
 #include <lpc17xx_i2c.h>
 #include <lpc17xx_pinsel.h>
+#include <lpc17xx_gpio.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -32,6 +33,26 @@ void KEYPAD_SendByte(unsigned char c) {
     I2C_MasterTransferData(LPC_I2C1, &t, I2C_TRANSFER_POLLING);
 }
 
+void KEYPAD_EnableInterrupt(void) {
+    // ensure GPIO functionality is set on that pin.
+    PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_23, PINSEL_FUNC_0);
+    /* enable interrupts by sending 1's to quasi-bidirectional pins */
+    char clean = 0xf0;
+    KEYPAD_SendByte(0xf0);
+    // Enable GPIO interrupts on P0.23
+    // on falling edge
+    GPIO_IntCmd(0, 1 << 23, 1);
+    // Enable the EINT3 Handler
+    NVIC_EnableIRQ(EINT3_IRQn);
+}
+
+void KEYPAD_ClearInterrupt(void) {
+    GPIO_ClearInt(0, 1 << 23);
+}
+
+int KEYPAD_GetInterrupt(void) {
+    return GPIO_GetIntStatus(0, 23, 1);
+}
 
 unsigned char KEYPAD_GetBufferedKey() {
     unsigned char ret;

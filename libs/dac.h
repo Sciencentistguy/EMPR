@@ -25,3 +25,7 @@ void GPDMA_InitFunc(uint32_t* buf, GPDMA_LLI_Type* DMA_Struct, GPDMA_Channel_CFG
     Output a sine wave with specified frequency and amplitude
 */
 void DAC_SineWave(int frequency, double amplitude);
+
+void DAC_StopSend();
+
+void DAC_UpdateData(uint16_t value);

@@ -22,3 +22,17 @@ unsigned char KEYPAD_GetKeyPressed();
 */
 unsigned char KEYPAD_GetBufferedKey();
 
+/**
+    Enable interrupt mode on the keypad
+*/
+void KEYPAD_EnableInterrupt();
+
+/**
+    Get Interrupt status
+*/
+int KEYPAD_GetInterrupt();
+
+/**
+    Reset the interrupt on the keypad
+*/
+void KEYPAD_ClearInterrupt();
