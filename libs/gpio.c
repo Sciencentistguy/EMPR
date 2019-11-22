@@ -7,7 +7,7 @@ void GPIO_Init(int port, int pin, int direction) {
 }
 
 void GPIO_SetPin(int port, int pin, int value) {
-    if (value) {
+    if (!value) {
         GPIO_ClearValue(port, 1 << pin);
 
     } else {

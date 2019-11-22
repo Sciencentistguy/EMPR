@@ -22,6 +22,18 @@ void DAC_StartSend(int Frequency, int NumSamples) {
     GPDMA_ChannelCmd(1, ENABLE);
 }
 
+void DAC_UpdateData(uint16_t data) {
+    DAC_UpdateValue(LPC_DAC, data);
+}
+
+void DAC_StopSend() {
+    DAC_CONVERTER_CFG_Type DAC_Conv;
+    DAC_Conv.CNT_ENA = 0;
+    DAC_Conv.DMA_ENA = 0;
+    DAC_ConfigDAConverterControl(LPC_DAC, &DAC_Conv);
+    GPDMA_ChannelCmd(1, DISABLE);
+}
+
 void GPDMA_InitFunc(uint32_t* Source, GPDMA_LLI_Type* DMA_Struct, GPDMA_Channel_CFG_Type* GPDMA_Cfg, int NumSamples) {
     DMA_Struct->SrcAddr = (uint32_t)Source; //The address where the list of values are stored
     DMA_Struct->DstAddr = (uint32_t) & (LPC_DAC->DACR); //What memory address to send the data to
