@@ -18,7 +18,7 @@ void KEYPAD_Init() {
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_0, PINSEL_FUNC_3);
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_1, PINSEL_FUNC_3);
     I2C_Init(LPC_I2C1, 100000);
-    I2C_Cmd(LPC_I2C1, 1);
+    I2C_Cmd(LPC_I2C1, ENABLE);
 }
 
 
@@ -37,7 +37,6 @@ void KEYPAD_EnableInterrupt(void) {
     // ensure GPIO functionality is set on that pin.
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_23, PINSEL_FUNC_0);
     /* enable interrupts by sending 1's to quasi-bidirectional pins */
-    char clean = 0xf0;
     KEYPAD_SendByte(0xf0);
     // Enable GPIO interrupts on P0.23
     // on falling edge

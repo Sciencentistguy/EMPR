@@ -57,11 +57,10 @@ void I2C_SweepBus() {
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_0, PINSEL_FUNC_3);
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PORT_1, PINSEL_FUNC_3);
     I2C_Init(LPC_I2C1, 100000);
-    I2C_Cmd(LPC_I2C1, 1);
+    I2C_Cmd(LPC_I2C1, ENABLE);
     unsigned char buf;
     I2C_M_SETUP_Type t;
     int j = 0;
-    char buf2[64];
 
     for (int i = 0; i < 128; i++) {
         t.sl_addr7bit = i & 0b1111111;

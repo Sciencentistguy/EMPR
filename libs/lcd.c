@@ -19,7 +19,7 @@ void LCD_Init() {
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_0, PINSEL_FUNC_3);
     PINSEL_Enable(PINSEL_PORT_0, PINSEL_PIN_1, PINSEL_FUNC_3);
     I2C_Init(LPC_I2C1, 100000);
-    I2C_Cmd(LPC_I2C1, 1);
+    I2C_Cmd(LPC_I2C1, ENABLE);
     unsigned char data[16];
     memset(data, 0, sizeof(data));
     unsigned char* p = data;
